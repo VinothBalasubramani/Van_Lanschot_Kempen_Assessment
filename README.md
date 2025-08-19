@@ -57,6 +57,11 @@ UC administration should be automated using **Terraform or Bicep**, integrated w
 
 ---
 
+# 🚀 Usage of LLM
+I began by outlining a detailed plan that captured the what, why, and how of the solution. This structured approach helped clarify the objectives and key considerations before moving into implementation. Once the framework was in place, I leveraged an LLM to bring the idea to life efficiently, ensuring the solution could be developed within the two-hour timeframe.
+
+---
+
 # 📊 Diagrams  
 
 ### 1. Automation Flow  
