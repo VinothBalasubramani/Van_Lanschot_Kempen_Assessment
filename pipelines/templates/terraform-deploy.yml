@@ -1,0 +1,26 @@
+parameters:
+  - name: envName
+    type: string
+  - name: backendKey
+    type: string
+
+jobs:
+- job: Terraform_Deploy_${{ parameters.envName }}
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: AzureCLI@2
+    displayName: 'Terraform Init/Plan/Apply'
+    inputs:
+      azureSubscription: 'svc-conn-azure' # TODO: replace with your service connection
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -euo pipefail
+        cd terraform/environments/${{ parameters.envName }}
+        terraform init -backend-config="resource_group_name=rg-strada-tfstate" \
+                        -backend-config="storage_account_name=stradatfstate" \
+                        -backend-config="container_name=tfstate" \
+                        -backend-config="key=${{ parameters.backendKey }}"
+        terraform plan -var-file=${{ parameters.envName }}.tfvars
+        terraform apply -auto-approve -var-file=${{ parameters.envName }}.tfvars
