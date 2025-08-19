@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+- stage: Dev
+  displayName: Deploy Dev
+  jobs:
+  - template: templates/terraform-deploy.yml
+    parameters:
+      envName: dev
+      backendKey: downstream-dev.tfstate
+
+- stage: Tst
+  displayName: Deploy Tst
+  dependsOn: Dev
+  condition: succeeded()
+  jobs:
+  - template: templates/terraform-deploy.yml
+    parameters:
+      envName: tst
+      backendKey: downstream-tst.tfstate
+
+- stage: Prd
+  displayName: Deploy Prd
+  dependsOn: Tst
+  condition: succeeded()
+  jobs:
+  - template: templates/terraform-deploy.yml
+    parameters:
+      envName: prd
+      backendKey: downstream-prd.tfstate
